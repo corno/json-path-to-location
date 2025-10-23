@@ -7,7 +7,7 @@
 
 > 🔍 **Find exact line:column locations of JSON values with surgical precision**
 
-A powerful command-line tool that parses JSON files while preserving complete location information, then navigates through the structure to pinpoint the exact position of any value. Perfect for editors, linters, debugging tools, and automated workflows.
+A convenient command-line tool that parses JSON files while preserving complete location information, then navigates through the structure to pinpoint the exact position of any value. Perfect for editors, linters, debugging tools, and automated workflows.
 
 ## ✨ Key Features
 
@@ -47,6 +47,15 @@ echo '["user", "profile", "name"]' | json-path-to-location data.json
 npm install -g json-path-to-location
 ```
 
+### Local Development
+```bash
+git clone <repository-url>
+cd json-path-to-location
+npm install
+npm run build
+npm link  # Create global symlink
+```
+
 ### Programmatic Usage
 ```bash
 npm install json-path-to-location
@@ -60,6 +69,166 @@ const parsed = parser.parse();
 const navigator = new JsonNavigator(parsed.tokens);
 const location = navigator.findLocationForPath(parsed.value, ["user", "name"]);
 // location: { start: { line: 5, column: 12 }, end: { line: 5, column: 24 } }
+```
+
+## Usage
+
+### Legacy Usage
+
+**Local Usage**
+```bash
+node dist/index.js <json-file>
+```
+
+**Global Usage (after installation)**
+```bash
+json-path-to-location <json-file>
+```
+
+The application will prompt you to enter the path interactively via stdin.
+
+### Arguments
+
+- `<json-file>`: Path to the JSON file to parse
+
+### Interactive Path Input
+
+After running the command, you'll be prompted to enter the path as a JSON array:
+- Use string elements for object property navigation
+- Use numeric elements for array index navigation
+- Elements must be strings or numbers only
+- Use empty array `[]` to get the root location
+- Can be mixed for complex navigation
+
+**Format:** `["property", 0, "nested"]`
+- Strings for object keys: `"property"`, `"name"`, `"address"`
+- Numbers for array indices: `0`, `1`, `2`
+- Mixed navigation: `["users", 0, "profile", "name"]`
+
+### Examples
+
+Given a JSON file `test-data.json`:
+```json
+{
+  "name": "John Doe",
+  "age": 30,
+  "address": {
+    "street": "123 Main St",
+    "city": "Anytown",
+    "zipcode": "12345"
+  },
+  "hobbies": ["reading", "coding", "gaming"],
+  "isActive": true,
+  "spouse": null,
+  "children": [
+    {
+      "name": "Alice",
+      "age": 8
+    },
+    {
+      "name": "Bob",
+      "age": 12
+    }
+  ]
+}
+```
+
+#### Basic Usage
+
+```bash
+# Get location of the root object
+json-path-to-location test-data.json
+# Prompt: Enter path as JSON array (e.g., ["property", 0, "nested"] or [] for root):
+# Input: []
+# Output: 1:1
+
+# Get location of the "name" property value
+json-path-to-location test-data.json
+# Prompt: Enter path as JSON array (e.g., ["property", 0, "nested"] or [] for root):
+# Input: ["name"]
+# Output: 2:11
+
+# Get location of the "age" property value
+json-path-to-location test-data.json
+# Prompt: Enter path as JSON array (e.g., ["property", 0, "nested"] or [] for root):
+# Input: ["age"]
+# Output: 3:10
+```
+
+#### Nested Object Navigation
+
+```bash
+# Navigate to address.street
+json-path-to-location test-data.json
+# Input: ["address", "street"]
+# Output: 5:15
+
+# Navigate to address.city
+json-path-to-location test-data.json
+# Input: ["address", "city"]
+# Output: 6:13
+```
+
+#### Array Navigation
+
+```bash
+# Get the second hobby (index 1)
+json-path-to-location test-data.json
+# Input: ["hobbies", 1]
+# Output: 9:26
+
+# Get the first hobby (index 0)
+json-path-to-location test-data.json
+# Input: ["hobbies", 0]
+# Output: 9:15
+```
+
+#### Complex Navigation
+
+```bash
+# Navigate to the first child's name
+json-path-to-location test-data.json
+# Input: ["children", 0, "name"]
+# Output: 14:15
+
+# Navigate to the second child's age
+json-path-to-location test-data.json
+# Input: ["children", 1, "age"]
+# Output: 19:14
+```
+
+#### Special Values
+
+```bash
+# Boolean value
+json-path-to-location test-data.json
+# Input: ["isActive"]
+# Output: 10:15
+
+# Null value
+json-path-to-location test-data.json
+# Input: ["spouse"]
+# Output: 11:13
+```
+
+#### Using with Pipes
+
+You can also use the application with pipes for automation:
+
+```bash
+# Using echo to provide input
+echo '["name"]' | json-path-to-location test-data.json
+# Output: 2:11
+
+echo '["address", "street"]' | json-path-to-location test-data.json
+# Output: 5:15
+
+echo '["children", 0, "name"]' | json-path-to-location test-data.json
+# Output: 14:15
+
+# Empty array for root
+echo '[]' | json-path-to-location test-data.json
+# Output: 1:1
 ```
 
 ## 🎬 Demo
@@ -86,6 +255,8 @@ echo '["users", 0, "profile", "email"]' | json-path-to-location users.json
 echo '["users"]' | json-path-to-location users.json  
 # Output: 2:12
 ```
+
+## 🔧 API Reference
 
 ## 🔧 API Reference
 
@@ -122,55 +293,39 @@ Paths are JSON arrays where:
 - **Numbers** navigate array indices: `0`, `1`, `2`
 - **Mixed** for complex navigation: `["users", 0, "profile", "settings", 2]`
 
-## 📋 Examples
-
-### Basic Usage
-
-```bash
-# Get location of the root object
-echo '[]' | json-path-to-location data.json
-# Output: 1:1
-
-# Get location of a property
-echo '["name"]' | json-path-to-location data.json
-# Output: 2:11
+### Legacy Usage
 ```
 
-### Complex Navigation
+## Output Format
 
+The application outputs the location in the format `line:column`, where:
+- `line`: 1-based line number
+- `column`: 1-based column number
+
+This corresponds to the starting position of the value in the JSON file.
+
+## Error Handling
+
+The application handles various error conditions:
+
+- **File not found**: If the specified JSON file doesn't exist
+- **Invalid JSON**: If the file contains malformed JSON
+- **Path not found**: If the specified path doesn't exist in the JSON structure
+- **Invalid navigation**: If you try to use object keys on arrays or array indices on non-arrays
+- **Invalid input format**: If the input is not a valid JSON array
+- **Invalid array elements**: If the JSON array contains elements other than strings or numbers
+
+Example errors:
 ```bash
-# Navigate through objects and arrays
-echo '["users", 0, "profile", "email"]' | json-path-to-location data.json
-# Output: 8:17
+json-path-to-location test-data.json
+# Input: ["nonexistent"]
+# Output: Error: Path [nonexistent] not found in JSON.
 
-# Array access
-echo '["items", 2]' | json-path-to-location data.json
-# Output: 12:5
-```
+# Input: "not an array"
+# Output: Error: Input must be a JSON array
 
-### Automation with Pipes
-
-```bash
-# Batch processing
-for path in '["name"]' '["age"]' '["email"]'; do
-  echo "$path" | json-path-to-location user.json
-done
-```
-
-## 🚨 Error Handling
-
-```bash
-# Invalid path
-echo '["nonexistent"]' | json-path-to-location data.json
-# Error: Path [nonexistent] not found in JSON.
-
-# Invalid format
-echo '"not an array"' | json-path-to-location data.json
-# Error: Input must be a JSON array
-
-# Invalid types
-echo '[true, "test"]' | json-path-to-location data.json
-# Error: Array elements must be strings or numbers
+# Input: [true, "test"]
+# Output: Error: Array elements must be strings or numbers
 ```
 
 ## ⚡ Performance
@@ -189,6 +344,17 @@ echo '[true, "test"]' | json-path-to-location data.json
 | 🔧 Editor integration | ✅ Perfect for IDEs | ❌ Not suitable | ❌ Limited |
 | 🚀 Zero dependencies | ✅ Lightweight | ✅ Built-in | ❌ Heavy deps |
 | 📦 CLI + Library | ✅ Both included | ❌ Parse only | ❌ Library only |
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Run tests (`npm test`)
+4. Commit your changes (`git commit -m 'Add amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
 
 ## 📊 Type Support
 
@@ -222,17 +388,6 @@ The test suite includes 29 comprehensive tests covering:
 - ✅ Error handling (non-existent paths, invalid operations)
 - ✅ JSON format validation (invalid syntax, non-arrays, invalid element types)
 - ✅ Edge cases and number parsing
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Run tests (`npm test`)
-4. Commit your changes (`git commit -m 'Add amazing feature'`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a Pull Request
 
 ## 📄 License
 

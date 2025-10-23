@@ -1,0 +1,22 @@
+{
+  "name": "John Doe",
+  "age": 30,
+  "address": {
+    "street": "123 Main St",
+    "city": "Anytown",
+    "zipcode": "12345"
+  },
+  "hobbies": ["reading", "coding", "gaming"],
+  "isActive": true,
+  "spouse": null,
+  "children": [
+    {
+      "name": "Alice",
+      "age": 8
+    },
+    {
+      "name": "Bob",
+      "age": 12
+    }
+  ]
+}

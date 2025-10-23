@@ -1,0 +1,54 @@
+{
+  "name": "json-path-to-location",
+  "version": "1.0.0",
+  "description": "🎯 Find exact line:column locations of JSON values with precise navigation. Perfect for editors, linters, and debugging tools.",
+  "main": "dist/lib.js",
+  "types": "dist/lib.d.ts",
+  "bin": {
+    "json-path-to-location": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js",
+    "test": "./test.sh"
+  },
+  "keywords": [
+    "json",
+    "parser", 
+    "location",
+    "line-column",
+    "position",
+    "cli",
+    "navigation",
+    "ast",
+    "source-map",
+    "debugging",
+    "editor",
+    "linter",
+    "json-path",
+    "coordinates"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/json-path-to-location.git"
+  },
+  "bugs": {
+    "url": "https://github.com/username/json-path-to-location/issues"
+  },
+  "homepage": "https://github.com/username/json-path-to-location#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

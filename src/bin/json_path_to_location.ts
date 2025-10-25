@@ -3,7 +3,7 @@
 import fs from 'fs';
 import path from 'path';
 import * as readline from 'readline';
-import { json_path_to_location } from '../src/api/json_path_to_location.js';
+import { json_path_to_location } from '../api/json_path_to_location.js';
 
 function parsePathFromInput(input: string): (string | number)[] {
   if (!input.trim()) {

@@ -2,8 +2,8 @@
   "name": "json-path-to-location",
   "version": "1.0.1",
   "description": "🎯 Find exact line:column locations of JSON values with precise navigation. Perfect for editors, linters, and debugging tools.",
-  "main": "dist/lib.js",
-  "types": "dist/lib.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "bin": {
     "json-path-to-location": "dist/bin/json_path_to_location.js"
   },

@@ -120,8 +120,8 @@ if command -v json-path-to-location >/dev/null 2>&1; then
     GLOBAL_CMD="json-path-to-location"
     echo -e "${YELLOW}Using global command: json-path-to-location${NC}"
 else
-    GLOBAL_CMD="node dist/index.js"
-    echo -e "${YELLOW}Using local command: node dist/index.js${NC}"
+    GLOBAL_CMD="node dist/bin/json_path_to_location.js"
+    echo -e "${YELLOW}Using local command: node dist/bin/json_path_to_location.js${NC}"
 fi
 
 echo

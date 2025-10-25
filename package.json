@@ -1,6 +1,6 @@
 {
   "name": "json-path-to-location",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "🎯 Find exact line:column locations of JSON values with precise navigation. Perfect for editors, linters, and debugging tools.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

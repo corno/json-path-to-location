@@ -14,6 +14,11 @@ export type Location = {
 export type Result = Location | null;
 
 export const json_path_to_location = (path: Step[], json: string): Result => {
+    // Validate that json parameter is actually a string
+    if (typeof json !== 'string') {
+        throw new Error('Invalid input: json parameter must be a string');
+    }
+
     try {
         // Parse the JSON string
         const parser = new JsonParser(json);

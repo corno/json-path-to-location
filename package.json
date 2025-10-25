@@ -11,7 +11,8 @@
     "build": "tsc",
     "start": "node dist/bin/json_path_to_location.js",
     "dev": "tsc && node dist/bin/json_path_to_location.js",
-    "test": "./test.sh"
+    "test": "./test.sh",
+    "test:api": "npm run build && node dist/api/json_path_to_location.test.js"
   },
   "keywords": [
     "json",

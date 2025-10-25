@@ -3,8 +3,7 @@
 import fs from 'fs';
 import path from 'path';
 import * as readline from 'readline';
-import { JsonParser } from './parser.js';
-import { JsonNavigator } from './navigator.js';
+import { json_path_to_location } from '../src/api/json_path_to_location.js';
 
 function parsePathFromInput(input: string): (string | number)[] {
   if (!input.trim()) {
@@ -76,37 +75,21 @@ export async function main() {
   }
 
   try {
-    // Read and parse the JSON file
+    // Read the JSON file
     const fileContent = fs.readFileSync(filePath, 'utf-8');
-    const parser = new JsonParser(fileContent);
-    const parsed = parser.parse();
     
     // Get path from stdin
     const pathInput = await readPathFromStdin();
     const pathSegments = parsePathFromInput(pathInput);
     
-    // Navigate to the specified path
-    const navigator = new JsonNavigator(parsed.tokens);
+    // Use the API function to find the location
+    const location = json_path_to_location(pathSegments, fileContent);
     
-    if (pathSegments.length === 0) {
-      // If no path segments, return location of root
-      const location = navigator.getLocation(parsed.value);
-      if (location) {
-        console.log(`${location.start.line}:${location.start.column}`);
-      } else {
-        console.error('Error: Could not find location information for root value.');
-        process.exit(1);
-      }
+    if (location) {
+      console.log(`${location.line}:${location.column}`);
     } else {
-      // Navigate to the specified path
-      const location = navigator.findLocationForPath(parsed.value, pathSegments);
-      
-      if (location) {
-        console.log(`${location.start.line}:${location.start.column}`);
-      } else {
-        console.error(`Error: Path [${pathSegments.join(', ')}] not found in JSON.`);
-        process.exit(1);
-      }
+      console.error(`Error: Path [${pathSegments.join(', ')}] not found in JSON or parsing failed.`);
+      process.exit(1);
     }
     
   } catch (error) {

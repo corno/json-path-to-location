@@ -5,12 +5,12 @@
   "main": "dist/lib.js",
   "types": "dist/lib.d.ts",
   "bin": {
-    "json-path-to-location": "dist/index.js"
+    "json-path-to-location": "dist/bin/json_path_to_location.js"
   },
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "tsc && node dist/index.js",
+    "start": "node dist/bin/json_path_to_location.js",
+    "dev": "tsc && node dist/bin/json_path_to_location.js",
     "test": "./test.sh"
   },
   "keywords": [
